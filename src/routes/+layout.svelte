@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from "$app/paths";
 	import { onMount } from 'svelte';
 	import { registerSW } from 'virtual:pwa-register';
 	import { demanderStockageDurable } from '$lib/db/depots';
@@ -18,10 +19,10 @@
 </svelte:head>
 
 <header class="nav">
-	<a href="/" class="brand">Décompte BTP</a>
+	<a href={base + "/"} class="brand">Décompte BTP</a>
 	<nav>
-		<a href="/">Marchés</a>
-		<a href="/parametres">Entreprise</a>
+		<a href={base + "/"}>Marchés</a>
+		<a href={base + "/parametres"}>Entreprise</a>
 	</nav>
 </header>
 

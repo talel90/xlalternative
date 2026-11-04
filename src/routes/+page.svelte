@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from "$app/paths";
 	import { onMount } from 'svelte';
 	import { listerMarches } from '$lib/db/depots';
 	import type { MarcheRecord } from '$lib/db/schema';
@@ -15,7 +16,7 @@
 
 <h1>Marchés</h1>
 
-<a href="/marche/nouveau" class="bouton">+ Nouveau marché</a>
+<a href={base + "/marche/nouveau"} class="bouton">+ Nouveau marché</a>
 
 {#if chargement}
 	<p>Chargement…</p>

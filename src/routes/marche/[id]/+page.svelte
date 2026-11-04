@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from "$app/paths";
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import { lireMarche } from '$lib/db/depots';
@@ -65,7 +66,7 @@
 	<p>Chargement…</p>
 {:else if !marche}
 	<p class="erreur">Marché introuvable.</p>
-	<a href="/">Retour aux marchés</a>
+	<a href={base + "/"}>Retour aux marchés</a>
 {:else}
 	<h1>Marché N°{marche.numero}</h1>
 	<p>{marche.intitule} — lot {marche.lot}</p>
@@ -77,7 +78,7 @@
 		<ul class="liste">
 			{#each attachements as a (a.id)}
 				<li>
-					<a href={`/marche/${id}/attachement/${a.numero}`}>Attachement N°{a.numero}</a>
+					<a href={`${base}/marche/${id}/attachement/${a.numero}`}>Attachement N°{a.numero}</a>
 					<span class="sous">du {a.dateArrete} · {a.statut}</span>
 				</li>
 			{/each}

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from "$app/paths";
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import { chargerContexte, type ContexteDocuments } from '$lib/db/serie-depots';
@@ -41,9 +42,9 @@
 	<p>Calcul des documents…</p>
 {:else if !contexte || !situation}
 	<p class="erreur">Attachement introuvable.</p>
-	<a href={`/marche/${marcheId}`}>Retour au marché</a>
+	<a href={`${base}/marche/${marcheId}`}>Retour au marché</a>
 {:else}
-	<a href={`/marche/${marcheId}/attachement/${numero}`}>← Saisie du métré</a>
+	<a href={`${base}/marche/${marcheId}/attachement/${numero}`}>← Saisie du métré</a>
 	<h1>Documents — Attachement N°{numero}</h1>
 	<p class="sous">Arrêté au {situation.dateArrete}. Les documents sont calculés à partir du métré saisi.</p>
 

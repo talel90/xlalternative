@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from "$app/paths";
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import { lireMarche } from '$lib/db/depots';
@@ -209,12 +210,12 @@
 	<p>Chargement…</p>
 {:else if !marche || !attachement}
 	<p class="erreur">Attachement introuvable.</p>
-	<a href={`/marche/${marcheId}`}>Retour au marché</a>
+	<a href={`${base}/marche/${marcheId}`}>Retour au marché</a>
 {:else}
-	<a href={`/marche/${marcheId}`}>← Marché N°{marche.numero}</a>
+	<a href={`${base}/marche/${marcheId}`}>← Marché N°{marche.numero}</a>
 	<h1>Attachement N°{attachement.numero}</h1>
 	<p class="sous">Arrêté au {attachement.dateArrete} · {attachement.statut}</p>
-	<p><a href={`/marche/${marcheId}/attachement/${numero}/documents`}>Voir les documents et le PDF →</a></p>
+	<p><a href={`${base}/marche/${marcheId}/attachement/${numero}/documents`}>Voir les documents et le PDF →</a></p>
 
 	{#if messageErreur}<p class="erreur">{messageErreur}</p>{/if}
 	{#if messageInfo}<p class="ok">{messageInfo}</p>{/if}

@@ -6,7 +6,7 @@ produit les mêmes chiffres que leurs documents Excel, et qu'elle est utilisable
 ## 1. Prérequis avant le test
 
 - [ ] Étape 5 complétée : pré-remplissage N+1 affiché, test hors ligne en mode avion réussi
-- [ ] Application publiée sur une adresse HTTPS (nécessaire pour l'installation et le service worker)
+
 - [ ] Sauvegarde .json disponible et testée (export puis import sur un second appareil)
 - [ ] Fichiers Excel originaux du marché obtenus (métré, attachement, décompte, récap, certificat)
 
