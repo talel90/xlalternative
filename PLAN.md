@@ -224,10 +224,10 @@ et seul l'affichage montre 3 décimales. L'arrondi au millième change donc le r
 - **Fini quand** : le bordereau du marché 12/2025 est importé en moins de 2 minutes
 
 ### Étape 3 — Saisie du métré
-- [ ] Liste des articles avec avancement
-- [ ] Saisie par ligne : champs du gabarit, `inputmode="decimal"`, total en direct
-- [ ] Dupliquer une ligne, réordonner, supprimer
-- [ ] Éléments types (P1, S1…) : création + utilisation « P1 × 24 »
+- [x] Liste des articles avec avancement (total du mois par article)
+- [x] Saisie par ligne : champs du gabarit, `inputmode="decimal"`, total en direct
+- [x] Dupliquer une ligne, supprimer [ ] réordonner (reporté)
+- [x] Éléments types (P1, S1…) : création + utilisation « P1 × 24 »
 - **Fini quand** : saisie fluide sur un téléphone Android d'entrée de gamme
 
 ### Étape 4 — Documents et PDF
