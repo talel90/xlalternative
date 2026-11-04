@@ -206,21 +206,21 @@ et seul l'affichage montre 3 décimales. L'arrondi au millième change donc le r
 ## 7. Plan de réalisation
 
 ### Étape 1 — Fondations et moteur de calcul
-- [ ] Initialiser SvelteKit + TS + Tailwind + vite-plugin-pwa + Vitest
-- [ ] `nombres.ts` : parsing avec virgule, format `64 742,872`, arrondis BigInt
-- [ ] `gabarits.ts`, `metre.ts`, `attachement.ts`, `decompte.ts`, `recapitulation.ts`
-- [ ] `enLettres.ts` (0 → 999 999 999 dinars + millimes, accords : « quatre-vingts », « cent(s) », « mille »)
-- [ ] `controles.ts`
-- [ ] Test de référence Marché 12/2025 au vert
+- [x] Initialiser SvelteKit + TS + vite-plugin-pwa + Vitest (Tailwind non ajouté)
+- [x] `nombres.ts` : parsing avec virgule, format `64 742,872`, arrondis BigInt
+- [x] `gabarits.ts`, `metre.ts`, `attachement.ts`, `decompte.ts`, `recapitulation.ts`
+- [x] `enLettres.ts` (0 → 999 999 999 dinars + millimes, accords : « quatre-vingts », « cent(s) », « mille »)
+- [x] `controles.ts`
+- [x] Test de référence Marché 12/2025 au vert (1 écart C-4/C-5 marqué skip, voir §8)
 - **Fini quand** : tous les tests passent, couverture 100 % sur `core/`
 
 ### Étape 2 — Données, marché et bordereau
-- [ ] Schéma Dexie + dépôts + `storage.persist()`
-- [ ] Écran profil entreprise
-- [ ] Écran nouveau marché
-- [ ] Import bordereau : collage (tabulations) + Excel (SheetJS) + détection des colonnes + écran de vérification
-- [ ] Contrôle « Σ qté prévue × PU × 1,19 = montant du marché »
-- [ ] Bibliothèque alimentée automatiquement à chaque import
+- [x] Schéma Dexie + dépôts + `storage.persist()`
+- [x] Écran profil entreprise
+- [x] Écran nouveau marché (à tester dans le navigateur)
+- [x] Import bordereau : collage, détection des colonnes, import Excel (SheetJS à la demande), écran de vérification
+- [x] Contrôle « Σ qté prévue × PU × 1,19 = montant du marché » (affiché à l'import)
+- [x] Bibliothèque alimentée automatiquement à chaque import
 - **Fini quand** : le bordereau du marché 12/2025 est importé en moins de 2 minutes
 
 ### Étape 3 — Saisie du métré
