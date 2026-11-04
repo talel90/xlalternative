@@ -58,6 +58,8 @@ export interface AttachementRecord {
 	numero: number;
 	dateArrete: string;
 	statut: 'brouillon' | 'valide';
+	/** Résultats figés à la validation (JSON) */
+	snapshot?: string;
 	updatedAt: number;
 }
 

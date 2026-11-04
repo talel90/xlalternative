@@ -11,7 +11,6 @@
 		lireAttachement,
 		lireDimension,
 		listerElements,
-		modifierLigne,
 		supprimerLigne,
 		totalDUneLigne,
 		totauxDuMois,
@@ -27,6 +26,8 @@
 	import { analyserFormule } from '$lib/core/elements';
 	import { formatDecimal } from '$lib/core/nombres';
 	import type { Champ, Unite } from '$lib/core/gabarits';
+	import { peutValider, type Controle } from '$lib/core/validation';
+	import { controlesDeLAttachement, validerAttachement } from '$lib/db/validation-depots';
 
 	const libelles: Record<Champ, string> = {
 		nbr: 'Nbr',
@@ -45,12 +46,16 @@
 	let lignes = $state<LigneMetreRecord[]>([]);
 	let elements = $state<ElementTypeRecord[]>([]);
 	let totaux = $state(new Map<string, bigint>());
+	let controles = $state<Controle[]>([]);
 	let chargement = $state(true);
 	let messageErreur = $state('');
+	let messageInfo = $state('');
 
 	/** Brouillon de saisie par article : une ligne en cours de saisie. */
 	let brouillons = $state<Record<string, Record<string, string>>>({});
 	let formules = $state<Record<string, string>>({});
+
+	const verrouille = $derived(attachement?.statut === 'valide');
 
 	async function recharger() {
 		marche = await lireMarche(marcheId);
@@ -60,12 +65,25 @@
 		lignes = await lignesDeLAttachement(attachement.id);
 		elements = await listerElements(marcheId);
 		totaux = await totauxDuMois(attachement.id, articles);
+		controles = attachement.statut === 'brouillon' ? await controlesDeLAttachement(marcheId, numero) : [];
 	}
 
 	onMount(async () => {
 		await recharger();
 		chargement = false;
 	});
+
+	async function valider() {
+		messageErreur = '';
+		messageInfo = '';
+		try {
+			await validerAttachement(marcheId, numero);
+			messageInfo = 'Attachement validé et verrouillé. Pensez à exporter une sauvegarde depuis les paramètres.';
+			await recharger();
+		} catch (e) {
+			messageErreur = e instanceof Error ? e.message : String(e);
+		}
+	}
 
 	function lignesDe(articleId: string): LigneMetreRecord[] {
 		return lignes.filter((l) => l.articleId === articleId);
@@ -146,19 +164,33 @@
 			}
 			donnees[c] = v;
 		}
-		await ajouterLigne(attachement.id, donnees);
-		formules[article.id] = '';
-		await recharger();
+		try {
+			await ajouterLigne(attachement.id, donnees);
+			formules[article.id] = '';
+			await recharger();
+		} catch (e) {
+			messageErreur = e instanceof Error ? e.message : String(e);
+		}
 	}
 
 	async function supprimer(l: LigneMetreRecord) {
-		await supprimerLigne(l.id);
-		await recharger();
+		messageErreur = '';
+		try {
+			await supprimerLigne(l.id);
+			await recharger();
+		} catch (e) {
+			messageErreur = e instanceof Error ? e.message : String(e);
+		}
 	}
 
 	async function dupliquer(l: LigneMetreRecord) {
-		await dupliquerLigne(l.id);
-		await recharger();
+		messageErreur = '';
+		try {
+			await dupliquerLigne(l.id);
+			await recharger();
+		} catch (e) {
+			messageErreur = e instanceof Error ? e.message : String(e);
+		}
 	}
 
 	function texteDimensions(article: ArticleRecord, l: LigneMetreRecord): string {
@@ -185,6 +217,27 @@
 	<p><a href={`/marche/${marcheId}/attachement/${numero}/documents`}>Voir les documents et le PDF →</a></p>
 
 	{#if messageErreur}<p class="erreur">{messageErreur}</p>{/if}
+	{#if messageInfo}<p class="ok">{messageInfo}</p>{/if}
+
+	{#if verrouille}
+		<p class="verrou">Cet attachement est validé : il est verrouillé et ne peut plus être modifié.</p>
+	{:else}
+		<section class="validation">
+			<h2>Validation</h2>
+			{#if controles.length === 0}
+				<p class="ok">Aucun contrôle en suspens.</p>
+			{:else}
+				{#each controles as c, i (i)}
+					<p class={c.niveau === 'bloquant' ? 'erreur' : 'avert'}>
+						{c.niveau === 'bloquant' ? 'Bloquant : ' : 'Attention : '}{c.message}
+					</p>
+				{/each}
+			{/if}
+			<button type="button" onclick={valider} disabled={!peutValider(controles)}>
+				Valider l'attachement
+			</button>
+		</section>
+	{/if}
 
 	{#each articles as article (article.id)}
 		{@const total = totaux.get(article.id) ?? 0n}
@@ -204,43 +257,47 @@
 					</div>
 					<div class="actions">
 						<span>{totalLigneTexte(article, l)}</span>
-						<button type="button" class="petit" onclick={() => dupliquer(l)}>Dupliquer</button>
-						<button type="button" class="petit danger" onclick={() => supprimer(l)}>Supprimer</button>
+						{#if !verrouille}
+							<button type="button" class="petit" onclick={() => dupliquer(l)}>Dupliquer</button>
+							<button type="button" class="petit danger" onclick={() => supprimer(l)}>Supprimer</button>
+						{/if}
 					</div>
 				</div>
 			{/each}
 
-			<div class="saisie">
-				<label>Formule rapide (ex. P1 × 24)
-					<div class="ligne-saisie">
-						<input
-							value={formules[article.id] ?? ''}
-							oninput={(e) => (formules[article.id] = (e.target as HTMLInputElement).value)}
-							placeholder="P1 × 24"
-						/>
-						<button type="button" class="petit" onclick={() => ajouterFormule(article)}>Ajouter</button>
-					</div>
-				</label>
-
-				<p class="sous">Ou saisie détaillée :</p>
-				<label>Libellé <input value={brouillonDe(article.id).libelle ?? ''} oninput={(e) => majBrouillon(article.id, 'libelle', (e.target as HTMLInputElement).value)} /></label>
-				<div class="grille">
-					{#each champsPourUnite(article.unite as Unite) as c (c)}
-						<label>{libelles[c]}
+			{#if !verrouille}
+				<div class="saisie">
+					<label>Formule rapide (ex. P1 × 24)
+						<div class="ligne-saisie">
 							<input
-								inputmode="decimal"
-								value={brouillonDe(article.id)[c] ?? (c === 'nbr' ? '1' : '')}
-								oninput={(e) => majBrouillon(article.id, c, (e.target as HTMLInputElement).value)}
+								value={formules[article.id] ?? ''}
+								oninput={(e) => (formules[article.id] = (e.target as HTMLInputElement).value)}
+								placeholder="P1 × 24"
 							/>
-						</label>
-					{/each}
-					<label>À déduire
-						<input inputmode="decimal" value={brouillonDe(article.id).aDeduire ?? ''} oninput={(e) => majBrouillon(article.id, 'aDeduire', (e.target as HTMLInputElement).value)} />
+							<button type="button" class="petit" onclick={() => ajouterFormule(article)}>Ajouter</button>
+						</div>
 					</label>
+
+					<p class="sous">Ou saisie détaillée :</p>
+					<label>Libellé <input value={brouillonDe(article.id).libelle ?? ''} oninput={(e) => majBrouillon(article.id, 'libelle', (e.target as HTMLInputElement).value)} /></label>
+					<div class="grille">
+						{#each champsPourUnite(article.unite as Unite) as c (c)}
+							<label>{libelles[c]}
+								<input
+									inputmode="decimal"
+									value={brouillonDe(article.id)[c] ?? (c === 'nbr' ? '1' : '')}
+									oninput={(e) => majBrouillon(article.id, c, (e.target as HTMLInputElement).value)}
+								/>
+							</label>
+						{/each}
+						<label>À déduire
+							<input inputmode="decimal" value={brouillonDe(article.id).aDeduire ?? ''} oninput={(e) => majBrouillon(article.id, 'aDeduire', (e.target as HTMLInputElement).value)} />
+						</label>
+					</div>
+					<p class="sous">Total de cette ligne : <strong>{totalBrouillon(article)}</strong></p>
+					<button type="button" onclick={() => ajouter(article)}>Ajouter la ligne</button>
 				</div>
-				<p class="sous">Total de cette ligne : <strong>{totalBrouillon(article)}</strong></p>
-				<button type="button" onclick={() => ajouter(article)}>Ajouter la ligne</button>
-			</div>
+			{/if}
 		</details>
 	{/each}
 {/if}
@@ -252,6 +309,28 @@
 	}
 	.erreur {
 		color: #b91c1c;
+	}
+	.ok {
+		color: #15803d;
+	}
+	.avert {
+		color: #b45309;
+	}
+	.verrou {
+		background: #fef3c7;
+		padding: 0.6rem;
+		border-radius: 0.4rem;
+	}
+	.validation {
+		background: #fff;
+		border: 1px solid #e5e7eb;
+		border-radius: 0.4rem;
+		padding: 0.6rem;
+		margin-top: 0.8rem;
+	}
+	h2 {
+		font-size: 1.05rem;
+		margin: 0 0 0.4rem;
 	}
 	.article {
 		background: #fff;

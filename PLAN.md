@@ -237,10 +237,10 @@ et seul l'affichage montre 3 décimales. L'arrondi au millième change donc le r
 - **Fini quand** : PDF fidèles aux modèles papier, générés hors ligne
 
 ### Étape 5 — Validation, enchaînement, sauvegarde
-- [ ] Contrôles avant validation (dates, dépassements, montant)
-- [ ] Validation → snapshot figé → attachement N+1 pré-rempli (quantités précédentes)
-- [ ] Export / import `.json` versionné + rappel de sauvegarde après validation
-- [ ] Vérification hors ligne complète (mode avion : création, saisie, PDF)
+- [x] Contrôles avant validation (dates, dépassements, montant) (testés)
+- [x] Validation → snapshot figé, lignes verrouillées, ordre N+1 imposé ; N+1 pré-rempli : le précédent est calculé mais pas encore affiché dans l’écran de saisie [ ]
+- [x] Export / import `.json` versionné + rappel de sauvegarde après validation
+- [ ] Vérification hors ligne complète (mode avion : création, saisie, PDF) : non testée
 - **Fini quand** : 2 attachements successifs produits entièrement hors ligne
 
 ### Étape 6 — Test terrain

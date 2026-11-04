@@ -62,7 +62,16 @@ async function prochainOrdre(attachementId: string): Promise<number> {
 	return lignes.length === 0 ? 0 : Math.max(...lignes.map((l) => l.ordre)) + 1;
 }
 
+/** Un attachement validé est figé : aucune ligne ne peut plus y être ajoutée, modifiée ou supprimée. */
+export async function verifierBrouillon(attachementId: string): Promise<void> {
+	const att = await db.attachements.get(attachementId);
+	if (att?.statut === 'valide') {
+		throw new Error(`L'attachement N°${att.numero} est validé et verrouillé.`);
+	}
+}
+
 export async function ajouterLigne(attachementId: string, donnees: DonneesLigne): Promise<void> {
+	await verifierBrouillon(attachementId);
 	await db.lignesMetre.add({
 		id: crypto.randomUUID(),
 		attachementId,
@@ -73,10 +82,14 @@ export async function ajouterLigne(attachementId: string, donnees: DonneesLigne)
 }
 
 export async function modifierLigne(id: string, donnees: Partial<DonneesLigne>): Promise<void> {
+	const l = await db.lignesMetre.get(id);
+	if (l) await verifierBrouillon(l.attachementId);
 	await db.lignesMetre.update(id, { ...donnees, updatedAt: maintenant() });
 }
 
 export async function supprimerLigne(id: string): Promise<void> {
+	const l = await db.lignesMetre.get(id);
+	if (l) await verifierBrouillon(l.attachementId);
 	await db.lignesMetre.delete(id);
 }
 
@@ -84,6 +97,7 @@ export async function supprimerLigne(id: string): Promise<void> {
 export async function dupliquerLigne(id: string): Promise<void> {
 	const source = await db.lignesMetre.get(id);
 	if (!source) return;
+	await verifierBrouillon(source.attachementId);
 	const lignes = await lignesDeLAttachement(source.attachementId);
 	const suivantes = lignes.filter((l) => l.ordre > source.ordre);
 	await db.transaction('rw', db.lignesMetre, async () => {
