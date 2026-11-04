@@ -1,5 +1,5 @@
-import { Unite } from './gabarits';
-import { LigneMetre, totalParArticle } from './metre';
+import type { Unite } from './gabarits';
+import { totalParArticle, type LigneMetre } from './metre';
 
 export interface ArticleMarche {
   code: string;

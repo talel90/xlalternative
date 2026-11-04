@@ -1,4 +1,4 @@
-import { ArticleMarche, LigneAttachement } from './attachement';
+import type { ArticleMarche, LigneAttachement } from './attachement';
 import { MILLIEME, arrondiDiv } from './nombres';
 
 /** Articles dont le cumul dépasse la quantité prévue au bordereau. */

@@ -1,4 +1,4 @@
-import { Dimensions, Unite, totalLigne } from './gabarits';
+import { totalLigne, type Dimensions, type Unite } from './gabarits';
 
 export interface LigneMetre {
   /** Code de l'article dans le bordereau (A, B-1, C-4…) */

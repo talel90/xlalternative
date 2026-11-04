@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { parseDecimal } from '../src/lib/core/nombres';
-import { ArticleMarche, calculerAttachement } from '../src/lib/core/attachement';
-import { LigneMetre } from '../src/lib/core/metre';
+import { calculerAttachement, type ArticleMarche } from '../src/lib/core/attachement';
+import type { LigneMetre } from '../src/lib/core/metre';
 import { calculerDecompte } from '../src/lib/core/decompte';
 import { calculerRecapitulation } from '../src/lib/core/recapitulation';
 import { controlerMontantMarche } from '../src/lib/core/controles';

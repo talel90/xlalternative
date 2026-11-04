@@ -1,14 +1,25 @@
 {
-  "name": "xlalternative",
-  "version": "0.1.0",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "test": "vitest run",
-    "test:watch": "vitest"
-  },
-  "devDependencies": {
-    "typescript": "^7.0.2",
-    "vitest": "^2.1.9"
-  }
+	"name": "xlalternative",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"prepare": "svelte-kit sync || echo ''",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"test": "vitest run"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-static": "^3.0.10",
+		"@sveltejs/kit": "^2.70.3",
+		"@sveltejs/vite-plugin-svelte": "^5.1.1",
+		"svelte": "^5.57.3",
+		"svelte-check": "^4.7.8",
+		"typescript": "^5.9.3",
+		"vite": "^6.4.5",
+		"vite-plugin-pwa": "^2.0.0",
+		"vitest": "^3.2.7"
+	}
 }

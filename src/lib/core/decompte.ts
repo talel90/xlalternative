@@ -1,5 +1,5 @@
 import { MILLIEME, arrondiDiv } from './nombres';
-import { LigneAttachement } from './attachement';
+import type { LigneAttachement } from './attachement';
 
 export interface LigneDecompte {
   code: string;
