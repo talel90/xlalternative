@@ -243,7 +243,7 @@ et seul l'affichage montre 3 décimales. L'arrondi au millième change donc le r
 - [ ] Vérification hors ligne complète (mode avion : création, saisie, PDF) : non testée
 - **Fini quand** : 2 attachements successifs produits entièrement hors ligne
 
-### Étape 6 — Test terrain
+### Étape 6 — Test terrain (checklist : docs/TEST-TERRAIN.md)
 - [ ] Déploiement (hébergement statique : Netlify, Cloudflare Pages ou GitHub Pages)
 - [ ] Test avec 1 ou 2 entrepreneurs sur un marché réel
 - [ ] Corrections et ajustements
