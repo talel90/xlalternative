@@ -231,9 +231,9 @@ et seul l'affichage montre 3 décimales. L'arrondi au millième change donc le r
 - **Fini quand** : saisie fluide sur un téléphone Android d'entrée de gamme
 
 ### Étape 4 — Documents et PDF
-- [ ] Aperçu à l'écran des 5 documents (onglets), recalculés en direct
-- [ ] Modèles pdfmake conformes aux documents actuels (en-tête ministère, signatures)
-- [ ] Export d'un seul PDF contenant les 5 documents, ou d'un document à la fois
+- [ ] Aperçu à l'écran : attachement, décompte, récap et certificat (4 documents ; le métré n'a pas encore de document séparé)
+- [ ] Modèles pdfmake conformes aux documents actuels (mise en page basique : la mise en forme exacte du papier reste à faire)
+- [x] Export d'un seul PDF regroupant les documents d'une situation
 - **Fini quand** : PDF fidèles aux modèles papier, générés hors ligne
 
 ### Étape 5 — Validation, enchaînement, sauvegarde

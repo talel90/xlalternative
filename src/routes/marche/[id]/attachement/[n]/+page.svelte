@@ -182,6 +182,7 @@
 	<a href={`/marche/${marcheId}`}>← Marché N°{marche.numero}</a>
 	<h1>Attachement N°{attachement.numero}</h1>
 	<p class="sous">Arrêté au {attachement.dateArrete} · {attachement.statut}</p>
+	<p><a href={`/marche/${marcheId}/attachement/${numero}/documents`}>Voir les documents et le PDF →</a></p>
 
 	{#if messageErreur}<p class="erreur">{messageErreur}</p>{/if}
 
